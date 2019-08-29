@@ -1,6 +1,8 @@
 
 package com.example.spidertest.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ public class Gallery {
     private Integer downs;
     private Integer points;
     private Integer score;
+    @SerializedName("is_album")
     private Boolean isAlbum;
     private Object vote;
     private Boolean favorite;

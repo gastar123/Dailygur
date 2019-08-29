@@ -3,13 +3,12 @@ package com.example.spidertest;
 import android.util.Log;
 
 import com.annimon.stream.Stream;
-import com.example.spidertest.dto.Gallery;
 import com.example.spidertest.dto.Image;
+import com.example.spidertest.dto.InnerData;
 
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 
 public class MainModel {
 
@@ -27,9 +26,21 @@ public class MainModel {
     public void loadGallery() {
         serverApi.getGallery(1)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(galleries -> {
-                    List<Image> imageList = Stream.of(galleries).map(gallery -> gallery.getImages().get(0)).toList();
-
+                .subscribe(allGalleryList -> {
+                    List<InnerData> imageList = Stream.of(allGalleryList.getData()).map(gallery -> {
+                        String id = gallery.getId();
+                        String imageLink;
+                        Boolean album = gallery.getIsAlbum();
+                        Log.e("ERRRRRRRRRR", gallery.getId());
+                        if (gallery.getIsAlbum()) {
+                            imageLink = gallery.getImages().get(0).getLink();
+                        } else {
+                            imageLink = gallery.getLink();
+                        }
+                        return new InnerData(id, imageLink, album);
+                    }).toList();
+                    mainPresenter.setImageList(imageList);
+                    Log.e("PICTURE", imageList.toString());
                 }, error -> Log.e("ERROR", error.getMessage(), error));
     }
 }

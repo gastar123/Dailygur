@@ -17,7 +17,7 @@ public class Image {
     private Integer height;
     private Integer size;
     private Integer views;
-    private Integer bandwidth;
+    private Long bandwidth;
     private Object vote;
     private Boolean favorite;
     private Object nsfw;
@@ -126,11 +126,11 @@ public class Image {
         this.views = views;
     }
 
-    public Integer getBandwidth() {
+    public Long getBandwidth() {
         return bandwidth;
     }
 
-    public void setBandwidth(Integer bandwidth) {
+    public void setBandwidth(Long bandwidth) {
         this.bandwidth = bandwidth;
     }
 

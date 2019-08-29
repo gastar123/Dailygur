@@ -50,4 +50,6 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
 
     implementation 'com.annimon:stream:1.2.1'
+
+    implementation group: 'com.github.bumptech.glide', name: 'glide', version: '4.9.0'
 }

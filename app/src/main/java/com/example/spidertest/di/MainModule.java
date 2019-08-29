@@ -19,7 +19,7 @@ public class MainModule {
     }
 
     @Provides
-    PicturesAdapter providePicturesAdapter(Context context, MainPresenter mainPresenter) {
-        return new PicturesAdapter(context, mainPresenter);
+    PicturesAdapter providePicturesAdapter(Context context) {
+        return new PicturesAdapter(context);
     }
 }
