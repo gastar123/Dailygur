@@ -31,13 +31,19 @@ public class MainModel {
                         String id = gallery.getId();
                         String imageLink;
                         Boolean album = gallery.getIsAlbum();
+                        Integer coverWidth;
+                        Integer coverHeight;
                         Log.e("ERRRRRRRRRR", gallery.getId());
                         if (gallery.getIsAlbum()) {
                             imageLink = gallery.getImages().get(0).getLink();
+                            coverWidth = gallery.getImages().get(0).getWidth();
+                            coverHeight = gallery.getImages().get(0).getHeight();
                         } else {
                             imageLink = gallery.getLink();
+                            coverWidth = gallery.getWidth();
+                            coverHeight = gallery.getHeight();
                         }
-                        return new InnerData(id, imageLink, album);
+                        return new InnerData(id, imageLink, album, coverWidth, coverHeight);
                     }).toList();
                     mainPresenter.setImageList(imageList);
                     Log.e("PICTURE", imageList.toString());

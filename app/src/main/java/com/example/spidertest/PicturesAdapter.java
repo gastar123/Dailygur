@@ -58,7 +58,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         }
 
         public void bindHolder(InnerData image) {
-            Glide.with(context).load(image.getImageLink()).into(ivPicture);
+            Glide.with(context).load(image.getImageLink()).override(image.getCoverWidth(), image.getCoveHeight()).into(ivPicture);
         }
     }
 }

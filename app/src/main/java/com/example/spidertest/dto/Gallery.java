@@ -14,8 +14,12 @@ public class Gallery {
     private Object description;
     private Integer datetime;
     private String cover;
+    @SerializedName("cover_width")
     private Integer coverWidth;
+    @SerializedName("cover_height")
     private Integer coverHeight;
+    private Integer width;
+    private Integer height;
     private String accountUrl;
     private Integer accountId;
     private String privacy;
@@ -333,5 +337,21 @@ public class Gallery {
 
     public void setAdConfig(AdConfig adConfig) {
         this.adConfig = adConfig;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
     }
 }

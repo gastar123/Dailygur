@@ -5,14 +5,18 @@ public class InnerData {
     private String id;
     private String imageLink;
     private Boolean album;
+    private Integer coverWidth;
+    private Integer coverHeight;
 
     public InnerData() {
     }
 
-    public InnerData(String id, String imageLink, Boolean album) {
+    public InnerData(String id, String imageLink, Boolean album, Integer coverWidth, Integer coverHeight) {
         this.id = id;
         this.imageLink = imageLink;
         this.album = album;
+        this.coverWidth = coverWidth;
+        this.coverHeight = coverHeight;
     }
 
     public String getId() {
@@ -37,5 +41,21 @@ public class InnerData {
 
     public void setAlbum(Boolean album) {
         this.album = album;
+    }
+
+    public Integer getCoverWidth() {
+        return coverWidth;
+    }
+
+    public void setCoverWidth(Integer coverWidth) {
+        this.coverWidth = coverWidth;
+    }
+
+    public Integer getCoveHeight() {
+        return coverHeight;
+    }
+
+    public void setCoverHeight(Integer coverHeight) {
+        this.coverHeight = coverHeight;
     }
 }
