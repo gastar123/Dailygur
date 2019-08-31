@@ -23,8 +23,8 @@ public class MainModel {
         this.mainPresenter = mainPresenter;
     }
 
-    public void loadGallery() {
-        serverApi.getGallery(1)
+    public void loadGallery(int page) {
+        serverApi.getGallery(page)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(allGalleryList -> {
                     List<InnerData> imageList = Stream.of(allGalleryList.getData()).map(gallery -> {
@@ -46,7 +46,12 @@ public class MainModel {
                         return new InnerData(id, imageLink, album, coverWidth, coverHeight);
                     }).toList();
                     mainPresenter.setImageList(imageList);
+                    RecyclerFragment.page++;
+                    RecyclerFragment.needLoad = true;
                     Log.e("PICTURE", imageList.toString());
-                }, error -> Log.e("ERROR", error.getMessage(), error));
+                }, error -> {
+                    RecyclerFragment.needLoad = true;
+                    Log.e("ERROR", error.getMessage(), error);
+                });
     }
 }

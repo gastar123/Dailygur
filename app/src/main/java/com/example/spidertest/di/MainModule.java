@@ -5,7 +5,7 @@ import android.content.Context;
 import com.example.spidertest.MainActivity;
 import com.example.spidertest.MainModel;
 import com.example.spidertest.MainPresenter;
-import com.example.spidertest.PicturesAdapter;
+import com.example.spidertest.recycler.PicturesAdapter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -18,8 +18,8 @@ public class MainModule {
         return new MainPresenter(mainModel, activity);
     }
 
-    @Provides
-    PicturesAdapter providePicturesAdapter(Context context) {
-        return new PicturesAdapter(context);
-    }
+//    @Provides
+//    PicturesAdapter providePicturesAdapter(Context context) {
+//        return new PicturesAdapter(context);
+//    }
 }

@@ -1,4 +1,4 @@
-package com.example.spidertest;
+package com.example.spidertest.recycler;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.spidertest.R;
 import com.example.spidertest.dto.InnerData;
 
 import java.util.ArrayList;
@@ -18,15 +19,17 @@ import androidx.recyclerview.widget.RecyclerView;
 public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.PictureHolder> {
 
     private Context context;
+    private OnItemClickListener clickListener;
     private final List<InnerData> imageList = new ArrayList<>();
 
-    public PicturesAdapter(Context context) {
+    public PicturesAdapter(Context context, OnItemClickListener clickListener) {
         this.context = context;
+        this.clickListener = clickListener;
     }
 
-    public void changeData(List<InnerData> notesList) {
+    public void changeData(List<InnerData> imageList) {
         this.imageList.clear();
-        this.imageList.addAll(notesList);
+        this.imageList.addAll(imageList);
         notifyDataSetChanged();
     }
 
@@ -59,6 +62,15 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
 
         public void bindHolder(InnerData image) {
             Glide.with(context).load(image.getImageLink()).override(image.getCoverWidth(), image.getCoveHeight()).into(ivPicture);
+            itemView.setOnClickListener(v -> {
+                if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    clickListener.onItemClick(imageList.get(getAdapterPosition()));
+                }
+            });
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(InnerData image);
     }
 }

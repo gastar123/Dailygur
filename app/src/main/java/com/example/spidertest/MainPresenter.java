@@ -18,8 +18,8 @@ public class MainPresenter {
         mainModel.setMainPresenter(this);
     }
 
-    public void loadPictureFromInternet() {
-        mainModel.loadGallery();
+    public void loadPictureFromInternet(int page) {
+        mainModel.loadGallery(page);
     }
 
     public void setImageList(List<InnerData> imageList) {
