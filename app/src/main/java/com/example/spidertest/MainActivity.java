@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Inject
     MainPresenter mainPresenter;
+    
 
     private final List<InnerData> imageList = new ArrayList<>();
     private RecyclerFragment recyclerFragment;
@@ -31,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerFragment = new RecyclerFragment();
         fTrans = getSupportFragmentManager().beginTransaction();
         fTrans.add(R.id.frgCont, recyclerFragment);
-        fTrans.addToBackStack(null);
         fTrans.commit();
+
 
         loadPicture(1);
     }
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
     public void toImageFragment(InnerData image) {
         fTrans = getSupportFragmentManager().beginTransaction();
         fTrans.replace(R.id.frgCont, ImageFragment.newInstance(image));
+        fTrans.addToBackStack(null);
         fTrans.commit();
     }
+
+
 }

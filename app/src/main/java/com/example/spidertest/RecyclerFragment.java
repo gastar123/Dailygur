@@ -30,34 +30,29 @@ public class RecyclerFragment extends Fragment {
     private MainActivity mainActivity;
     public static int page = 1;
     public static boolean needLoad;
+    private RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recycler, container, false);
+        recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
 
         setRetainInstance(true);
         mainActivity = (MainActivity) getActivity();
-        init(view);
+        init(recyclerView);
 
-        return view;
+        return recyclerView;
     }
 
-    private void init(View view) {
-        RecyclerView rvMain = view.findViewById(R.id.rvMain);
+    private void init(RecyclerView recyclerView) {
         StaggeredGridLayoutManager staggeredVerticalLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         staggeredVerticalLayoutManager.supportsPredictiveItemAnimations();
 
-        picturesAdapter = new PicturesAdapter(getContext(), new PicturesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(InnerData image) {
-                mainActivity.toImageFragment(image);
-            }
-        });
+        picturesAdapter = new PicturesAdapter(getContext(), image -> mainActivity.toImageFragment(image));
         picturesAdapter.setHasStableIds(true);
 
-        rvMain.setLayoutManager(staggeredVerticalLayoutManager);
-        rvMain.setAdapter(picturesAdapter);
-        rvMain.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.setLayoutManager(staggeredVerticalLayoutManager);
+        recyclerView.setAdapter(picturesAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 int[] lastVisiblePictures = staggeredVerticalLayoutManager.findLastCompletelyVisibleItemPositions(null);
