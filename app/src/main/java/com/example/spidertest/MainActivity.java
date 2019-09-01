@@ -63,20 +63,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setAlbum(Album album) {
-
+        imageFragment.setAlbum(album);
     }
 
     public void setImage(Image image) {
-
+        imageFragment.setImage(image);
     }
 
     public void setCommentList(List<Comment> commentList) {
-
+        imageFragment.setCommentList(commentList);
     }
 
     public void toImageFragment(InnerData image) {
         fTrans = getSupportFragmentManager().beginTransaction();
-        fTrans.replace(R.id.frgCont, ImageFragment.newInstance(image, this));
+        fTrans.replace(R.id.frgCont, ImageFragment.newInstance(image));
         fTrans.addToBackStack(null);
         fTrans.commit();
     }
