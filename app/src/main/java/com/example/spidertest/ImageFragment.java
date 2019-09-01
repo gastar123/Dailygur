@@ -21,15 +21,12 @@ import com.example.spidertest.dto.InnerData;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.List;
+import java.util.zip.Inflater;
 
 public class ImageFragment extends Fragment {
 
     private MainActivity mainActivity;
-    private ImageView imageView;
-    private TextView tvComment;
     private TextView tvTitle;
-    private TextView tvDescription;
-    private TextView tvTag;
     private LinearLayout layImage;
     private LinearLayout layComment;
     private FlexboxLayout layTag;
@@ -72,13 +69,13 @@ public class ImageFragment extends Fragment {
         Log.e("POST", album.getId());
         tvTitle.setText(album.getTitle());
         Stream.of(album.getImages()).forEach(imageInAlbum -> {
-            imageView = new ImageView(mainActivity);
+            ImageView imageView = new ImageView(mainActivity);
             imageView.setAdjustViewBounds(true);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(mainActivity).load(imageInAlbum.getLink()).into(imageView);
             layImage.addView(imageView, lParams);
             if (imageInAlbum.getDescription() != null) {
-                tvDescription = new TextView(mainActivity);
+                TextView tvDescription = new TextView(mainActivity);
                 tvDescription.setText(imageInAlbum.getDescription());
                 layImage.addView(tvDescription, lParams);
             }
@@ -87,7 +84,7 @@ public class ImageFragment extends Fragment {
         LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
         lParams.setMargins(10, 10, 10, 10);
         Stream.of(album.getTags()).forEach(tag -> {
-            tvTag = new TextView(mainActivity);
+            TextView tvTag = new TextView(mainActivity);
             tvTag.setBackgroundResource(R.drawable.bg_tag);
             tvTag.setPadding(10, 0, 10, 0);
             tvTag.setText(tag.getDisplayName());
@@ -98,14 +95,14 @@ public class ImageFragment extends Fragment {
     public void setImage(Image image) {
         Log.e("POST", image.getId());
         tvTitle.setText(image.getTitle());
-        imageView = new ImageView(mainActivity);
+        ImageView imageView = new ImageView(mainActivity);
         imageView.setAdjustViewBounds(true);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide.with(mainActivity).load(image.getLink()).into(imageView);
         layImage.addView(imageView, lParams);
 
         Stream.of(image.getTags()).forEach(tag -> {
-            tvTag = new TextView(mainActivity);
+            TextView tvTag = new TextView(mainActivity);
             tvTag.setBackgroundResource(R.drawable.bg_tag);
             tvTag.setPadding(10, 0, 10, 0);
             tvTag.setText(tag.getDisplayName());
@@ -116,13 +113,24 @@ public class ImageFragment extends Fragment {
     public void setCommentList(List<Comment> commentList) {
         LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(matchParent, wrapContent);
         lParams.setMargins(0, 10, 0, 0);
-        Stream.of(commentList).forEach(comment -> {
-            tvComment = new TextView(mainActivity);
-            tvComment.setBackgroundResource(R.drawable.bg_veiw_text);
-            tvComment.setPadding(10, 0, 10, 0);
-            tvComment.setText(comment.getComment());
-            layComment.addView(tvComment, lParams);
-        });
+        addComments(commentList, 0);
+    }
 
+    private void addComments(List<Comment> commentList, int lvl) {
+        Stream.of(commentList).forEach(comment -> {
+            View view = getLayoutInflater().inflate(R.layout.comment_layout, null);
+            TextView tvComment = view.findViewById(R.id.tvComment);
+            TextView tvAuthor = view.findViewById(R.id.tvAuthor);
+            tvComment.setText(comment.getComment());
+            tvAuthor.setText(comment.getAuthor());
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(lParams);
+            lp.width = matchParent;
+            lp.leftMargin = lParams.leftMargin + 20 * lvl;
+            layComment.addView(view, lp);
+            List<Comment> children = comment.getChildren();
+            if (children != null && !children.isEmpty()) {
+                addComments(children, lvl + 1);
+            }
+        });
     }
 }
