@@ -51,7 +51,7 @@ public class InnerData {
         this.coverWidth = coverWidth;
     }
 
-    public Integer getCoveHeight() {
+    public Integer getCoverHeight() {
         return coverHeight;
     }
 

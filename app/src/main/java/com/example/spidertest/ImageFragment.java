@@ -1,13 +1,10 @@
 package com.example.spidertest;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,19 +18,24 @@ import com.example.spidertest.dto.Album;
 import com.example.spidertest.dto.Comment;
 import com.example.spidertest.dto.Image;
 import com.example.spidertest.dto.InnerData;
+import com.google.android.flexbox.FlexboxLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ImageFragment extends Fragment {
 
     private MainActivity mainActivity;
     private ImageView imageView;
-    private TextView textView;
+    private TextView tvComment;
+    private TextView tvTitle;
+    private TextView tvDescription;
+    private TextView tvTag;
     private LinearLayout layImage;
     private LinearLayout layComment;
+    private FlexboxLayout layTag;
     private LinearLayout.LayoutParams lParams;
     private int wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT;
+    private int matchParent = LinearLayout.LayoutParams.MATCH_PARENT;
 
     public static ImageFragment newInstance(InnerData image) {
         ImageFragment fragment = new ImageFragment();
@@ -47,10 +49,13 @@ public class ImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
+        mainActivity = (MainActivity) getActivity();
+        tvTitle = view.findViewById(R.id.tvTitle);
+        layTag = view.findViewById(R.id.layTag);
         layImage = view.findViewById(R.id.layImage);
         layComment = view.findViewById(R.id.layComment);
-
-        mainActivity = (MainActivity) getActivity();
+        lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
+        lParams.setMargins(0, 10, 0, 0);
 
         savedInstanceState = getArguments();
         String id = savedInstanceState.getString("id");
@@ -64,36 +69,59 @@ public class ImageFragment extends Fragment {
     }
 
     public void setAlbum(Album album) {
-        lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
-        lParams.setMargins(0, 10, 0, 0);
+        Log.e("POST", album.getId());
+        tvTitle.setText(album.getTitle());
         Stream.of(album.getImages()).forEach(imageInAlbum -> {
             imageView = new ImageView(mainActivity);
             imageView.setAdjustViewBounds(true);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(mainActivity).load(imageInAlbum.getLink()).into(imageView);
             layImage.addView(imageView, lParams);
+            if (imageInAlbum.getDescription() != null) {
+                tvDescription = new TextView(mainActivity);
+                tvDescription.setText(imageInAlbum.getDescription());
+                layImage.addView(tvDescription, lParams);
+            }
+        });
+
+        LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
+        lParams.setMargins(10, 10, 10, 10);
+        Stream.of(album.getTags()).forEach(tag -> {
+            tvTag = new TextView(mainActivity);
+            tvTag.setBackgroundResource(R.drawable.bg_tag);
+            tvTag.setPadding(10, 0, 10, 0);
+            tvTag.setText(tag.getDisplayName());
+            layTag.addView(tvTag, lParams);
         });
     }
 
     public void setImage(Image image) {
-        lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
-        lParams.setMargins(0, 10, 0, 0);
+        Log.e("POST", image.getId());
+        tvTitle.setText(image.getTitle());
         imageView = new ImageView(mainActivity);
         imageView.setAdjustViewBounds(true);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide.with(mainActivity).load(image.getLink()).into(imageView);
         layImage.addView(imageView, lParams);
+
+        Stream.of(image.getTags()).forEach(tag -> {
+            tvTag = new TextView(mainActivity);
+            tvTag.setBackgroundResource(R.drawable.bg_tag);
+            tvTag.setPadding(10, 0, 10, 0);
+            tvTag.setText(tag.getDisplayName());
+            layTag.addView(tvTag, lParams);
+        });
     }
 
     public void setCommentList(List<Comment> commentList) {
-        lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
+        LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(matchParent, wrapContent);
         lParams.setMargins(0, 10, 0, 0);
         Stream.of(commentList).forEach(comment -> {
-            textView = new TextView(mainActivity);
-            textView.setBackgroundResource(R.drawable.bg_veiw_text);
-            textView.setPadding(10, 0, 10, 0);
-            textView.setText(comment.getComment());
-            layComment.addView(textView, lParams);
+            tvComment = new TextView(mainActivity);
+            tvComment.setBackgroundResource(R.drawable.bg_veiw_text);
+            tvComment.setPadding(10, 0, 10, 0);
+            tvComment.setText(comment.getComment());
+            layComment.addView(tvComment, lParams);
         });
 
     }

@@ -8,6 +8,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.spidertest.R;
 import com.example.spidertest.dto.InnerData;
 
@@ -80,9 +81,10 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
 
         public void bindHolder(InnerData image) {
             ivPicture.getLayoutParams().width = imgWidth;
-            ivPicture.getLayoutParams().height = imgWidth * image.getCoveHeight() / image.getCoverWidth();
+            ivPicture.getLayoutParams().height = imgWidth * image.getCoverHeight() / image.getCoverWidth();
             ivPicture.requestLayout();
-            Glide.with(context).load(image.getImageLink()).placeholder(R.drawable.image_placeholder).into(ivPicture);
+            RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.image_placeholder).fitCenter();
+            Glide.with(context).load(image.getImageLink()).apply(requestOptions).into(ivPicture);
             itemView.setOnClickListener(v -> {
                 if (getAdapterPosition() != RecyclerView.NO_POSITION) {
                     clickListener.onItemClick(imageList.get(getAdapterPosition()));

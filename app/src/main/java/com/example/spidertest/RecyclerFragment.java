@@ -63,7 +63,7 @@ public class RecyclerFragment extends Fragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 int[] lastVisiblePictures = staggeredVerticalLayoutManager.findLastCompletelyVisibleItemPositions(null);
-                if ((lastVisiblePictures[0] == imageList.size() || lastVisiblePictures[1] == imageList.size()) && needLoad) {
+                if (needLoad && (lastVisiblePictures[0] + 1 == imageList.size() || lastVisiblePictures[1] + 1 == imageList.size())) {
                     mainActivity.loadPicture(page);
                     needLoad = false;
                 }

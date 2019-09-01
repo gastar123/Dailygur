@@ -20,7 +20,7 @@ public class Image {
     }
 
     private String id;
-    private Object title;
+    private String title;
     private String description;
     private Integer datetime;
     private String type;
@@ -39,7 +39,7 @@ public class Image {
     private Boolean isAd;
     private Boolean inMostViral;
     private Boolean hasSound;
-    private List<Object> tags = null;
+    private List<Tag> tags = null;
     private Integer adType;
     private String adUrl;
     private String edited;
@@ -66,11 +66,11 @@ public class Image {
         this.id = id;
     }
 
-    public Object getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(Object title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -218,11 +218,11 @@ public class Image {
         this.hasSound = hasSound;
     }
 
-    public List<Object> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<Object> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 

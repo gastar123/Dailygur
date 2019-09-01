@@ -1,12 +1,15 @@
 
 package com.example.spidertest.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Tag {
 
     private String name;
+    @SerializedName("display_name")
     private String displayName;
     private Integer followers;
     private Integer totalItems;
