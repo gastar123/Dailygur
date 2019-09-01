@@ -82,7 +82,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
             ivPicture.getLayoutParams().width = imgWidth;
             ivPicture.getLayoutParams().height = imgWidth * image.getCoveHeight() / image.getCoverWidth();
             ivPicture.requestLayout();
-            Glide.with(context).load(image.getImageLink()).into(ivPicture);
+            Glide.with(context).load(image.getImageLink()).placeholder(R.drawable.image_placeholder).into(ivPicture);
             itemView.setOnClickListener(v -> {
                 if (getAdapterPosition() != RecyclerView.NO_POSITION) {
                     clickListener.onItemClick(imageList.get(getAdapterPosition()));

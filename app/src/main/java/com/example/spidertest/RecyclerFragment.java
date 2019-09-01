@@ -35,8 +35,6 @@ public class RecyclerFragment extends Fragment {
     public static boolean needLoad;
     private RecyclerView recyclerView;
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);

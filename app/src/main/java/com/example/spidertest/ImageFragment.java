@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
@@ -26,9 +27,9 @@ import java.util.List;
 
 public class ImageFragment extends Fragment {
 
-    private List<Comment> commentList = new ArrayList<>();
     private MainActivity mainActivity;
     private ImageView imageView;
+    private TextView textView;
     private LinearLayout layImage;
     private LinearLayout layComment;
     private LinearLayout.LayoutParams lParams;
@@ -64,6 +65,7 @@ public class ImageFragment extends Fragment {
 
     public void setAlbum(Album album) {
         lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
+        lParams.setMargins(0, 10, 0, 0);
         Stream.of(album.getImages()).forEach(imageInAlbum -> {
             imageView = new ImageView(mainActivity);
             imageView.setAdjustViewBounds(true);
@@ -75,6 +77,7 @@ public class ImageFragment extends Fragment {
 
     public void setImage(Image image) {
         lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
+        lParams.setMargins(0, 10, 0, 0);
         imageView = new ImageView(mainActivity);
         imageView.setAdjustViewBounds(true);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -83,6 +86,15 @@ public class ImageFragment extends Fragment {
     }
 
     public void setCommentList(List<Comment> commentList) {
-        this.commentList = commentList;
+        lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
+        lParams.setMargins(0, 10, 0, 0);
+        Stream.of(commentList).forEach(comment -> {
+            textView = new TextView(mainActivity);
+            textView.setBackgroundResource(R.drawable.bg_veiw_text);
+            textView.setPadding(10, 0, 10, 0);
+            textView.setText(comment.getComment());
+            layComment.addView(textView, lParams);
+        });
+
     }
 }
