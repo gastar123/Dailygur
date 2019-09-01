@@ -6,6 +6,9 @@ import dagger.android.AndroidInjection;
 
 import android.os.Bundle;
 
+import com.example.spidertest.dto.Album;
+import com.example.spidertest.dto.Comment;
+import com.example.spidertest.dto.Image;
 import com.example.spidertest.dto.InnerData;
 
 import java.util.ArrayList;
@@ -17,10 +20,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Inject
     MainPresenter mainPresenter;
-    
 
-    private final List<InnerData> imageList = new ArrayList<>();
+    private final List<InnerData> pictureList = new ArrayList<>();
     private RecyclerFragment recyclerFragment;
+    private ImageFragment imageFragment;
     private FragmentTransaction fTrans;
 
     @Override
@@ -30,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerFragment = new RecyclerFragment();
+        imageFragment = new ImageFragment();
         fTrans = getSupportFragmentManager().beginTransaction();
         fTrans.add(R.id.frgCont, recyclerFragment);
         fTrans.commit();
-
 
         loadPicture(1);
     }
@@ -42,17 +45,39 @@ public class MainActivity extends AppCompatActivity {
         mainPresenter.loadPictureFromInternet(page);
     }
 
-    public void setImageList(List<InnerData> imageList) {
-        this.imageList.addAll(imageList);
-        recyclerFragment.updateList(this.imageList);
+    public void loadAlbum(String galleryHash) {
+        mainPresenter.loadAlbumFromInternet(galleryHash);
+    }
+
+    public void loadImage(String galleryImageHash) {
+        mainPresenter.loadImageFromInternet(galleryImageHash);
+    }
+
+    public void loadComment(String galleryHash) {
+
+    }
+
+    public void setPictureList(List<InnerData> pictureList) {
+        this.pictureList.addAll(pictureList);
+        recyclerFragment.updateList(this.pictureList);
+    }
+
+    public void setAlbum(Album album) {
+
+    }
+
+    public void setImage(Image image) {
+
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+
     }
 
     public void toImageFragment(InnerData image) {
         fTrans = getSupportFragmentManager().beginTransaction();
-        fTrans.replace(R.id.frgCont, ImageFragment.newInstance(image));
+        fTrans.replace(R.id.frgCont, ImageFragment.newInstance(image, this));
         fTrans.addToBackStack(null);
         fTrans.commit();
     }
-
-
 }

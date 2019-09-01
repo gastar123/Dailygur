@@ -3,7 +3,6 @@ package com.example.spidertest;
 import android.util.Log;
 
 import com.annimon.stream.Stream;
-import com.example.spidertest.dto.Image;
 import com.example.spidertest.dto.InnerData;
 
 import java.util.List;
@@ -45,7 +44,7 @@ public class MainModel {
                         }
                         return new InnerData(id, imageLink, album, coverWidth, coverHeight);
                     }).toList();
-                    mainPresenter.setImageList(imageList);
+                    mainPresenter.setPictureList(imageList);
                     RecyclerFragment.page++;
                     RecyclerFragment.needLoad = true;
                     Log.e("PICTURE", imageList.toString());
@@ -53,5 +52,30 @@ public class MainModel {
                     RecyclerFragment.needLoad = true;
                     Log.e("ERROR", error.getMessage(), error);
                 });
+    }
+
+    public void loadComment(String galleryHash) {
+        serverApi.getComments(galleryHash)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(allComments -> mainPresenter.setCommentList(allComments.getData()),
+                        error -> Log.e("ERROR", error.getMessage(), error));
+    }
+
+    public void loadAlbum(String galleryHash) {
+        serverApi.getAlbum(galleryHash)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(album -> {
+                    mainPresenter.setAlbum(album);
+                    loadComment(galleryHash);
+                }, error -> Log.e("ERROR", error.getMessage(), error));
+    }
+
+    public void loadImage(String galleryImageHash) {
+        serverApi.getImage(galleryImageHash)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(image -> {
+                    mainPresenter.setImage(image);
+                    loadComment(galleryImageHash);
+                }, error -> Log.e("ERROR", error.getMessage(), error));
     }
 }

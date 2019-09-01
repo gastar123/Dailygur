@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Gallery {
+public class Album {
 
     private String id;
     private String title;

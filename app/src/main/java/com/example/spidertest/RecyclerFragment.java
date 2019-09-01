@@ -1,5 +1,7 @@
 package com.example.spidertest;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import io.reactivex.Observable;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,23 +35,29 @@ public class RecyclerFragment extends Fragment {
     public static boolean needLoad;
     private RecyclerView recyclerView;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
 
+        savedInstanceState = getArguments();
+
         setRetainInstance(true);
         mainActivity = (MainActivity) getActivity();
-        init(recyclerView);
+        init(recyclerView, savedInstanceState);
 
         return recyclerView;
     }
 
-    private void init(RecyclerView recyclerView) {
+    private void init(RecyclerView recyclerView, Bundle savedInstanceState) {
         StaggeredGridLayoutManager staggeredVerticalLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         staggeredVerticalLayoutManager.supportsPredictiveItemAnimations();
 
-        picturesAdapter = new PicturesAdapter(getContext(), image -> mainActivity.toImageFragment(image));
-        picturesAdapter.setHasStableIds(true);
+        if (savedInstanceState == null) {
+            picturesAdapter = new PicturesAdapter(getContext(), image -> mainActivity.toImageFragment(image));
+//            picturesAdapter.setHasStableIds(true);
+        }
 
         recyclerView.setLayoutManager(staggeredVerticalLayoutManager);
         recyclerView.setAdapter(picturesAdapter);
@@ -68,5 +77,12 @@ public class RecyclerFragment extends Fragment {
     public void updateList(List<InnerData> imageList) {
         this.imageList = imageList;
         picturesAdapter.changeData(imageList);
+    }
+
+    public void onDestroyView() {
+        Bundle bundle = new Bundle();
+        this.setArguments(bundle);
+        super.onDestroyView();
+
     }
 }
