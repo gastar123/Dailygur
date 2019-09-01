@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ public class ImageFragment extends Fragment {
         return fragment;
     }
 
+//    TODO Переделать на recyclerview
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
@@ -76,6 +78,7 @@ public class ImageFragment extends Fragment {
             layImage.addView(imageView, lParams);
             if (imageInAlbum.getDescription() != null) {
                 TextView tvDescription = new TextView(mainActivity);
+                tvDescription.setAutoLinkMask(Linkify.WEB_URLS);
                 tvDescription.setText(imageInAlbum.getDescription());
                 layImage.addView(tvDescription, lParams);
             }
@@ -100,6 +103,12 @@ public class ImageFragment extends Fragment {
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide.with(mainActivity).load(image.getLink()).into(imageView);
         layImage.addView(imageView, lParams);
+        if (image.getDescription() != null) {
+            TextView tvDescription = new TextView(mainActivity);
+            tvDescription.setAutoLinkMask(Linkify.WEB_URLS);
+            tvDescription.setText(image.getDescription());
+            layImage.addView(tvDescription, lParams);
+        }
 
         Stream.of(image.getTags()).forEach(tag -> {
             TextView tvTag = new TextView(mainActivity);
