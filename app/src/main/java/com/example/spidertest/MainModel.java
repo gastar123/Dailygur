@@ -65,7 +65,7 @@ public class MainModel {
         serverApi.getAlbum(galleryHash)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(album -> {
-                    mainPresenter.setAlbum(album);
+                    mainPresenter.setAlbum(album.getData());
                     loadComment(galleryHash);
                 }, error -> Log.e("ERROR", error.getMessage(), error));
     }
@@ -74,7 +74,7 @@ public class MainModel {
         serverApi.getImage(galleryImageHash)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(image -> {
-                    mainPresenter.setImage(image);
+                    mainPresenter.setImage(image.getData());
                     loadComment(galleryImageHash);
                 }, error -> Log.e("ERROR", error.getMessage(), error));
     }

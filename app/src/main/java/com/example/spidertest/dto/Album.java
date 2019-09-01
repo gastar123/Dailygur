@@ -3,11 +3,21 @@ package com.example.spidertest.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Album {
+
+    public static class AlbumHolder {
+        private Album data;
+
+        public Album getData() {
+            return data;
+        }
+
+        public void setData(Album data) {
+            this.data = data;
+        }
+    }
 
     private String id;
     private String title;

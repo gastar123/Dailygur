@@ -27,8 +27,7 @@ import java.util.List;
 public class ImageFragment extends Fragment {
 
     private List<Comment> commentList = new ArrayList<>();
-
-
+    private MainActivity mainActivity;
     private ImageView imageView;
     private LinearLayout layImage;
     private LinearLayout layComment;
@@ -50,8 +49,7 @@ public class ImageFragment extends Fragment {
         layImage = view.findViewById(R.id.layImage);
         layComment = view.findViewById(R.id.layComment);
 
-
-        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) getActivity();
 
         savedInstanceState = getArguments();
         String id = savedInstanceState.getString("id");
@@ -66,23 +64,21 @@ public class ImageFragment extends Fragment {
 
     public void setAlbum(Album album) {
         lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
-        Stream.of(album.getImages()).map(imageInAlbum -> {
-            lParams.gravity = Gravity.CENTER;
-            lParams.gravity = Gravity.TOP;
-            imageView = new ImageView(getContext());
-            Glide.with(getContext()).load(imageInAlbum.getLink()).into(imageView);
+        Stream.of(album.getImages()).forEach(imageInAlbum -> {
+            imageView = new ImageView(mainActivity);
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            Glide.with(mainActivity).load(imageInAlbum.getLink()).into(imageView);
             layImage.addView(imageView, lParams);
-            return null;
         });
     }
 
-
     public void setImage(Image image) {
         lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
-        lParams.gravity = Gravity.CENTER;
-        lParams.gravity = Gravity.TOP;
-        imageView = new ImageView(getContext());
-        Glide.with(getContext()).load(image.getLink()).into(imageView);
+        imageView = new ImageView(mainActivity);
+        imageView.setAdjustViewBounds(true);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        Glide.with(mainActivity).load(image.getLink()).into(imageView);
         layImage.addView(imageView, lParams);
     }
 

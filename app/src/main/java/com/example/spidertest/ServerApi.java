@@ -19,8 +19,8 @@ public interface ServerApi {
     Observable<AllComments> getComments(@Path("galleryHash") String galleryHash);
 
     @GET("3/gallery/album/{galleryHash}")
-    Observable<Album> getAlbum(@Path("galleryHash") String galleryHash);
+    Observable<Album.AlbumHolder> getAlbum(@Path("galleryHash") String galleryHash);
 
     @GET("3/gallery/image/{galleryImageHash}")
-    Observable<Image> getImage(@Path("galleryImageHash") String galleryImageHash);
+    Observable<Image.ImageHolder> getImage(@Path("galleryImageHash") String galleryImageHash);
 }

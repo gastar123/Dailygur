@@ -7,6 +7,18 @@ import java.util.Map;
 
 public class Image {
 
+    public static class ImageHolder {
+        private Image data;
+
+        public Image getData() {
+            return data;
+        }
+
+        public void setData(Image data) {
+            this.data = data;
+        }
+    }
+
     private String id;
     private Object title;
     private String description;

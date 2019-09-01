@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerFragment = new RecyclerFragment();
-        imageFragment = new ImageFragment();
         fTrans = getSupportFragmentManager().beginTransaction();
         fTrans.add(R.id.frgCont, recyclerFragment);
         fTrans.commit();
@@ -75,8 +74,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toImageFragment(InnerData image) {
+        imageFragment = ImageFragment.newInstance(image);
         fTrans = getSupportFragmentManager().beginTransaction();
-        fTrans.replace(R.id.frgCont, ImageFragment.newInstance(image));
+        fTrans.replace(R.id.frgCont, imageFragment);
         fTrans.addToBackStack(null);
         fTrans.commit();
     }
