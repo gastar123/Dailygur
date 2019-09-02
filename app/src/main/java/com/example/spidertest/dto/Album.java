@@ -59,7 +59,6 @@ public class Album {
     private Boolean inMostViral;
     private Boolean includeAlbumAds;
     private List<Image> images;
-    private AdConfig adConfig;
 
     public String getId() {
         return id;
@@ -339,14 +338,6 @@ public class Album {
 
     public void setImages(List<Image> images) {
         this.images = images;
-    }
-
-    public AdConfig getAdConfig() {
-        return adConfig;
-    }
-
-    public void setAdConfig(AdConfig adConfig) {
-        this.adConfig = adConfig;
     }
 
     public Integer getWidth() {

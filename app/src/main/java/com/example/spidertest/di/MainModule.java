@@ -17,9 +17,4 @@ public class MainModule {
     MainPresenter provideMainPresenter(MainModel mainModel, MainActivity activity) {
         return new MainPresenter(mainModel, activity);
     }
-
-//    @Provides
-//    PicturesAdapter providePicturesAdapter(Context context) {
-//        return new PicturesAdapter(context);
-//    }
 }

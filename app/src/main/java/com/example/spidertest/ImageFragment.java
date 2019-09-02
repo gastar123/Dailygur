@@ -19,6 +19,7 @@ import com.example.spidertest.dto.Album;
 import com.example.spidertest.dto.Comment;
 import com.example.spidertest.dto.Image;
 import com.example.spidertest.dto.InnerData;
+import com.example.spidertest.dto.Tag;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class ImageFragment extends Fragment {
         return fragment;
     }
 
-//    TODO Переделать на recyclerview
+    //    TODO Переделать на recyclerview
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
@@ -68,55 +69,20 @@ public class ImageFragment extends Fragment {
     }
 
     public void setAlbum(Album album) {
-        Log.e("POST", album.getId());
         tvTitle.setText(album.getTitle());
-        Stream.of(album.getImages()).forEach(imageInAlbum -> {
-            ImageView imageView = new ImageView(mainActivity);
-            imageView.setAdjustViewBounds(true);
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            Glide.with(mainActivity).load(imageInAlbum.getLink()).into(imageView);
-            layImage.addView(imageView, lParams);
-            if (imageInAlbum.getDescription() != null) {
-                TextView tvDescription = new TextView(mainActivity);
-                tvDescription.setAutoLinkMask(Linkify.WEB_URLS);
-                tvDescription.setText(imageInAlbum.getDescription());
-                layImage.addView(tvDescription, lParams);
-            }
-        });
+        Stream.of(album.getImages()).forEach(imageInAlbum ->
+                setImagesAndDescription(imageInAlbum));
 
-        LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
-        lParams.setMargins(10, 10, 10, 10);
-        Stream.of(album.getTags()).forEach(tag -> {
-            TextView tvTag = new TextView(mainActivity);
-            tvTag.setBackgroundResource(R.drawable.bg_tag);
-            tvTag.setPadding(10, 0, 10, 0);
-            tvTag.setText(tag.getDisplayName());
-            layTag.addView(tvTag, lParams);
-        });
+        Stream.of(album.getTags()).forEach(tag ->
+                setTags(tag));
     }
 
     public void setImage(Image image) {
-        Log.e("POST", image.getId());
         tvTitle.setText(image.getTitle());
-        ImageView imageView = new ImageView(mainActivity);
-        imageView.setAdjustViewBounds(true);
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        Glide.with(mainActivity).load(image.getLink()).into(imageView);
-        layImage.addView(imageView, lParams);
-        if (image.getDescription() != null) {
-            TextView tvDescription = new TextView(mainActivity);
-            tvDescription.setAutoLinkMask(Linkify.WEB_URLS);
-            tvDescription.setText(image.getDescription());
-            layImage.addView(tvDescription, lParams);
-        }
+        setImagesAndDescription(image);
 
-        Stream.of(image.getTags()).forEach(tag -> {
-            TextView tvTag = new TextView(mainActivity);
-            tvTag.setBackgroundResource(R.drawable.bg_tag);
-            tvTag.setPadding(10, 0, 10, 0);
-            tvTag.setText(tag.getDisplayName());
-            layTag.addView(tvTag, lParams);
-        });
+        Stream.of(image.getTags()).forEach(tag ->
+                setTags(tag));
     }
 
     public void setCommentList(List<Comment> commentList) {
@@ -141,5 +107,29 @@ public class ImageFragment extends Fragment {
                 addComments(children, lvl + 1);
             }
         });
+    }
+
+    private void setTags(Tag tag) {
+        LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
+        lParams.setMargins(10, 10, 10, 10);
+        TextView tvTag = new TextView(mainActivity);
+        tvTag.setBackgroundResource(R.drawable.bg_tag);
+        tvTag.setPadding(10, 0, 10, 0);
+        tvTag.setText(tag.getDisplayName());
+        layTag.addView(tvTag, lParams);
+    }
+
+    private void setImagesAndDescription(Image image) {
+        ImageView imageView = new ImageView(mainActivity);
+        imageView.setAdjustViewBounds(true);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        Glide.with(mainActivity).load(image.getLink()).into(imageView);
+        layImage.addView(imageView, lParams);
+        if (image.getDescription() != null) {
+            TextView tvDescription = new TextView(mainActivity);
+            tvDescription.setAutoLinkMask(Linkify.WEB_URLS);
+            tvDescription.setText(image.getDescription());
+            layImage.addView(tvDescription, lParams);
+        }
     }
 }

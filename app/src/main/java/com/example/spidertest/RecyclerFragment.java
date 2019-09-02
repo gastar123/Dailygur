@@ -54,7 +54,6 @@ public class RecyclerFragment extends Fragment {
 
         if (savedInstanceState == null) {
             picturesAdapter = new PicturesAdapter(getContext(), image -> mainActivity.toImageFragment(image));
-//            picturesAdapter.setHasStableIds(true);
         }
 
         recyclerView.setLayoutManager(staggeredVerticalLayoutManager);

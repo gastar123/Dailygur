@@ -49,7 +49,6 @@ public class Image {
     private String mp4;
     private String gifv;
     private String hls;
-    private Processing processing;
     private Object commentCount;
     private Object favoriteCount;
     private Object ups;
@@ -296,14 +295,6 @@ public class Image {
 
     public void setHls(String hls) {
         this.hls = hls;
-    }
-
-    public Processing getProcessing() {
-        return processing;
-    }
-
-    public void setProcessing(Processing processing) {
-        this.processing = processing;
     }
 
     public Object getCommentCount() {

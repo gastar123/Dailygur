@@ -1,5 +1,7 @@
 package com.example.spidertest;
 
+import android.widget.Toast;
+
 import com.example.spidertest.dto.Album;
 import com.example.spidertest.dto.Comment;
 import com.example.spidertest.dto.Image;
@@ -44,5 +46,9 @@ public class MainPresenter {
 
     public void setCommentList(List<Comment> commentList) {
         view.setCommentList(commentList);
+    }
+
+    public void makeToast() {
+        Toast.makeText(view, "Нет подключения к серверу", Toast.LENGTH_SHORT).show();
     }
 }

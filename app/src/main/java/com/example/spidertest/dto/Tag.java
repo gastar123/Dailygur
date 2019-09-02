@@ -24,7 +24,6 @@ public class Tag {
     private String description;
     private Object logoHash;
     private Object logoDestinationUrl;
-//    private DescriptionAnnotations descriptionAnnotations;
 
     public String getName() {
         return name;
@@ -145,12 +144,4 @@ public class Tag {
     public void setLogoDestinationUrl(Object logoDestinationUrl) {
         this.logoDestinationUrl = logoDestinationUrl;
     }
-
-//    public DescriptionAnnotations getDescriptionAnnotations() {
-//        return descriptionAnnotations;
-//    }
-//
-//    public void setDescriptionAnnotations(DescriptionAnnotations descriptionAnnotations) {
-//        this.descriptionAnnotations = descriptionAnnotations;
-//    }
 }

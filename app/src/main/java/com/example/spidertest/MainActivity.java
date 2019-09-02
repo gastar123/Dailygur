@@ -52,10 +52,6 @@ public class MainActivity extends AppCompatActivity {
         mainPresenter.loadImageFromInternet(galleryImageHash);
     }
 
-    public void loadComment(String galleryHash) {
-
-    }
-
     public void setPictureList(List<InnerData> pictureList) {
         this.pictureList.addAll(pictureList);
         recyclerFragment.updateList(this.pictureList);

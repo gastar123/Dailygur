@@ -32,7 +32,6 @@ public class MainModel {
                         Boolean album = gallery.getIsAlbum();
                         Integer coverWidth;
                         Integer coverHeight;
-                        Log.e("ERRRRRRRRRR", gallery.getId());
                         if (gallery.getIsAlbum()) {
                             imageLink = gallery.getImages().get(0).getLink();
                             coverWidth = gallery.getImages().get(0).getWidth();
@@ -47,10 +46,10 @@ public class MainModel {
                     mainPresenter.setPictureList(imageList);
                     RecyclerFragment.page++;
                     RecyclerFragment.needLoad = true;
-                    Log.e("PICTURE", imageList.toString());
                 }, error -> {
                     RecyclerFragment.needLoad = true;
                     Log.e("ERROR", error.getMessage(), error);
+                    mainPresenter.makeToast();
                 });
     }
 
@@ -58,7 +57,10 @@ public class MainModel {
         serverApi.getComments(galleryHash)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(allComments -> mainPresenter.setCommentList(allComments.getData()),
-                        error -> Log.e("ERROR", error.getMessage(), error));
+                        error -> {
+                            Log.e("ERROR", error.getMessage(), error);
+                            mainPresenter.makeToast();
+                        });
     }
 
     public void loadAlbum(String galleryHash) {
@@ -67,7 +69,10 @@ public class MainModel {
                 .subscribe(album -> {
                     mainPresenter.setAlbum(album.getData());
                     loadComment(galleryHash);
-                }, error -> Log.e("ERROR", error.getMessage(), error));
+                }, error -> {
+                    Log.e("ERROR", error.getMessage(), error);
+                    mainPresenter.makeToast();
+                });
     }
 
     public void loadImage(String galleryImageHash) {
@@ -76,6 +81,9 @@ public class MainModel {
                 .subscribe(image -> {
                     mainPresenter.setImage(image.getData());
                     loadComment(galleryImageHash);
-                }, error -> Log.e("ERROR", error.getMessage(), error));
+                }, error -> {
+                    Log.e("ERROR", error.getMessage(), error);
+                    mainPresenter.makeToast();
+                });
     }
 }
