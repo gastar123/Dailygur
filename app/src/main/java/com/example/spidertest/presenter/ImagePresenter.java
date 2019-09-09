@@ -1,5 +1,7 @@
 package com.example.spidertest.presenter;
 
+import android.util.Log;
+
 import com.example.spidertest.model.ImageModel;
 import com.example.spidertest.view.IImageView;
 
@@ -11,5 +13,37 @@ public class ImagePresenter {
     public ImagePresenter(IImageView view, ImageModel model) {
         this.view = view;
         this.model = model;
+    }
+
+    public void loadAlbum(String id) {
+        model.loadAlbum(id)
+                .subscribe(album -> {
+                            view.setAlbum(album);
+                            loadComment(id);
+                        },
+                        error -> onError(error)
+                );
+    }
+
+    public void loadImage(String id) {
+        model.loadImage(id)
+                .subscribe(image -> {
+                            view.setImage(image);
+                            loadComment(id);
+                        },
+                        error -> onError(error)
+                );
+    }
+
+    private void loadComment(String id) {
+        model.loadComment(id)
+                .subscribe(allComments -> view.setCommentList(allComments),
+                        error -> onError(error)
+                );
+    }
+
+    private void onError(Throwable error) {
+        Log.e("ERROR", error.getMessage(), error);
+        view.makeToast("Нет подключения к серверу");
     }
 }

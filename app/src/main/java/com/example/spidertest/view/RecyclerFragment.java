@@ -1,5 +1,6 @@
 package com.example.spidertest.view;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -7,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import dagger.android.support.AndroidSupportInjection;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +30,17 @@ import javax.inject.Inject;
 public class RecyclerFragment extends Fragment implements IRecyclerView {
 
     @Inject
-    private RecyclerPresenter presenter;
+    RecyclerPresenter presenter;
     private PicturesAdapter picturesAdapter;
     private List<InnerData> imageList = new ArrayList<>();
     private MainActivity mainActivity;
     private RecyclerView recyclerView;
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,8 +85,8 @@ public class RecyclerFragment extends Fragment implements IRecyclerView {
 
     @Override
     public void updateList(List<InnerData> imageList) {
-        this.imageList = imageList;
-        picturesAdapter.changeData(imageList);
+        this.imageList.addAll(imageList);
+        picturesAdapter.changeData(this.imageList);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.spidertest.di;
 
-import com.example.spidertest.MainModel;
 import com.example.spidertest.model.ImageModel;
 import com.example.spidertest.model.RecyclerModel;
 import com.example.spidertest.model.ServerApi;

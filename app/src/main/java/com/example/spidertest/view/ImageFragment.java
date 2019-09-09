@@ -1,8 +1,11 @@
 package com.example.spidertest.view;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import dagger.android.AndroidInjection;
+import dagger.android.support.AndroidSupportInjection;
 
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
@@ -25,9 +29,12 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.List;
 
-public class ImageFragment extends Fragment {
+import javax.inject.Inject;
 
-    private ImagePresenter presenter;
+public class ImageFragment extends Fragment implements IImageView {
+
+    @Inject
+    ImagePresenter presenter;
     private MainActivity mainActivity;
     private TextView tvTitle;
     private LinearLayout layImage;
@@ -46,6 +53,12 @@ public class ImageFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+    }
+
     //    TODO Переделать на recyclerview
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,13 +75,14 @@ public class ImageFragment extends Fragment {
         String id = savedInstanceState.getString("id");
         boolean isAlbum = savedInstanceState.getBoolean("isAlbum");
         if (isAlbum) {
-            mainActivity.loadAlbum(id);
+            presenter.loadAlbum(id);
         } else {
-            mainActivity.loadImage(id);
+            presenter.loadImage(id);
         }
         return view;
     }
 
+    @Override
     public void setAlbum(Album album) {
         tvTitle.setText(album.getTitle());
         Stream.of(album.getImages()).forEach(imageInAlbum ->
@@ -78,6 +92,7 @@ public class ImageFragment extends Fragment {
                 setTags(tag));
     }
 
+    @Override
     public void setImage(Image image) {
         tvTitle.setText(image.getTitle());
         setImagesAndDescription(image);
@@ -86,6 +101,7 @@ public class ImageFragment extends Fragment {
                 setTags(tag));
     }
 
+    @Override
     public void setCommentList(List<Comment> commentList) {
         LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(matchParent, wrapContent);
         lParams.setMargins(0, 10, 0, 0);
@@ -132,5 +148,10 @@ public class ImageFragment extends Fragment {
             tvDescription.setText(image.getDescription());
             layImage.addView(tvDescription, lParams);
         }
+    }
+
+    @Override
+    public void makeToast(String s) {
+        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
     }
 }

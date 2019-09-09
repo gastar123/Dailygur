@@ -24,15 +24,14 @@ public class RecyclerPresenter {
     public void setPictureList() {
         model.loadGallery(page + 1)
                 .subscribe(imageList -> {
-                            page++;
-                            needLoad = true;
-                            view.updateList(imageList);
-                        }
-                        , error -> {
-                            needLoad = true;
-                            Log.e("ERROR", error.getMessage(), error);
-                            view.makeToast("Нет подключения к серверу");
-                        });
+                    page++;
+                    needLoad = true;
+                    view.updateList(imageList);
+                }, error -> {
+                    needLoad = true;
+                    Log.e("ERROR", error.getMessage(), error);
+                    view.makeToast("Нет подключения к серверу");
+                });
     }
 
     public void loadNextPage() {
