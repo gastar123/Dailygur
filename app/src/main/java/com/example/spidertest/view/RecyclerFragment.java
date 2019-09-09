@@ -1,39 +1,44 @@
-package com.example.spidertest;
+package com.example.spidertest.view;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import io.reactivex.Observable;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.annimon.stream.Stream;
-import com.annimon.stream.function.Function;
+import com.bumptech.glide.Glide;
+import com.example.spidertest.R;
 import com.example.spidertest.dto.InnerData;
+import com.example.spidertest.presenter.RecyclerPresenter;
 import com.example.spidertest.recycler.PicturesAdapter;
-
-import org.reactivestreams.Subscription;
+import com.example.spidertest.view.MainActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class RecyclerFragment extends Fragment {
+import javax.inject.Inject;
 
+public class RecyclerFragment extends Fragment implements IRecyclerView {
+
+    @Inject
+    private RecyclerPresenter presenter;
     private PicturesAdapter picturesAdapter;
     private List<InnerData> imageList = new ArrayList<>();
     private MainActivity mainActivity;
-    public static int page = 1;
-    public static boolean needLoad;
     private RecyclerView recyclerView;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter.onCreate();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,7 +58,7 @@ public class RecyclerFragment extends Fragment {
         staggeredVerticalLayoutManager.supportsPredictiveItemAnimations();
 
         if (savedInstanceState == null) {
-            picturesAdapter = new PicturesAdapter(getContext(), image -> mainActivity.toImageFragment(image));
+            picturesAdapter = new PicturesAdapter(Glide.with(recyclerView.getContext()), image -> mainActivity.toImageFragment(image));
         }
 
         recyclerView.setLayoutManager(staggeredVerticalLayoutManager);
@@ -62,20 +67,26 @@ public class RecyclerFragment extends Fragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 int[] lastVisiblePictures = staggeredVerticalLayoutManager.findLastCompletelyVisibleItemPositions(null);
-                if (needLoad && (lastVisiblePictures[0] + 1 == imageList.size() || lastVisiblePictures[1] + 1 == imageList.size())) {
-                    mainActivity.loadPicture(page);
-                    needLoad = false;
+                if ((lastVisiblePictures[0] + 1 == imageList.size() || lastVisiblePictures[1] + 1 == imageList.size())) {
+                    presenter.loadNextPage();
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
     }
 
+    @Override
     public void updateList(List<InnerData> imageList) {
         this.imageList = imageList;
         picturesAdapter.changeData(imageList);
     }
 
+    @Override
+    public void makeToast(String s) {
+        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onDestroyView() {
         Bundle bundle = new Bundle();
         this.setArguments(bundle);

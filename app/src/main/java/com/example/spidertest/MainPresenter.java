@@ -6,6 +6,7 @@ import com.example.spidertest.dto.Album;
 import com.example.spidertest.dto.Comment;
 import com.example.spidertest.dto.Image;
 import com.example.spidertest.dto.InnerData;
+import com.example.spidertest.view.MainActivity;
 
 import java.util.List;
 
@@ -20,9 +21,7 @@ public class MainPresenter {
         mainModel.setMainPresenter(this);
     }
 
-    public void loadPictureFromInternet(int page) {
-        mainModel.loadGallery(page);
-    }
+
 
     public void loadAlbumFromInternet(String galleryHash) {
         mainModel.loadAlbum(galleryHash);

@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.annimon.stream.Stream;
 import com.example.spidertest.dto.InnerData;
+import com.example.spidertest.model.ServerApi;
+import com.example.spidertest.view.RecyclerFragment;
 
 import java.util.List;
 
@@ -20,37 +22,6 @@ public class MainModel {
 
     public void setMainPresenter(MainPresenter mainPresenter) {
         this.mainPresenter = mainPresenter;
-    }
-
-    public void loadGallery(int page) {
-        serverApi.getGallery(page)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(allGalleryList -> {
-                    List<InnerData> imageList = Stream.of(allGalleryList.getData()).map(gallery -> {
-                        String id = gallery.getId();
-                        String imageLink;
-                        Boolean album = gallery.getIsAlbum();
-                        Integer coverWidth;
-                        Integer coverHeight;
-                        if (gallery.getIsAlbum()) {
-                            imageLink = gallery.getImages().get(0).getLink();
-                            coverWidth = gallery.getImages().get(0).getWidth();
-                            coverHeight = gallery.getImages().get(0).getHeight();
-                        } else {
-                            imageLink = gallery.getLink();
-                            coverWidth = gallery.getWidth();
-                            coverHeight = gallery.getHeight();
-                        }
-                        return new InnerData(id, imageLink, album, coverWidth, coverHeight);
-                    }).toList();
-                    mainPresenter.setPictureList(imageList);
-                    RecyclerFragment.page++;
-                    RecyclerFragment.needLoad = true;
-                }, error -> {
-                    RecyclerFragment.needLoad = true;
-                    Log.e("ERROR", error.getMessage(), error);
-                    mainPresenter.makeToast();
-                });
     }
 
     public void loadComment(String galleryHash) {

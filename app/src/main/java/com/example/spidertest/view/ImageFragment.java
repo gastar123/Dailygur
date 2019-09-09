@@ -1,11 +1,10 @@
-package com.example.spidertest;
+package com.example.spidertest.view;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
 import android.text.util.Linkify;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +14,20 @@ import android.widget.TextView;
 
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
+import com.example.spidertest.R;
 import com.example.spidertest.dto.Album;
 import com.example.spidertest.dto.Comment;
 import com.example.spidertest.dto.Image;
 import com.example.spidertest.dto.InnerData;
 import com.example.spidertest.dto.Tag;
+import com.example.spidertest.presenter.ImagePresenter;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class ImageFragment extends Fragment {
 
+    private ImagePresenter presenter;
     private MainActivity mainActivity;
     private TextView tvTitle;
     private LinearLayout layImage;

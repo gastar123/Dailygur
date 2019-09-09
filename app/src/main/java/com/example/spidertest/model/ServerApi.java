@@ -1,4 +1,4 @@
-package com.example.spidertest;
+package com.example.spidertest.model;
 
 import com.example.spidertest.dto.Album;
 import com.example.spidertest.dto.AllAlbum;

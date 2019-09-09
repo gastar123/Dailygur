@@ -1,4 +1,4 @@
-package com.example.spidertest;
+package com.example.spidertest.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -6,6 +6,8 @@ import dagger.android.AndroidInjection;
 
 import android.os.Bundle;
 
+import com.example.spidertest.MainPresenter;
+import com.example.spidertest.R;
 import com.example.spidertest.dto.Album;
 import com.example.spidertest.dto.Comment;
 import com.example.spidertest.dto.Image;
@@ -37,11 +39,6 @@ public class MainActivity extends AppCompatActivity {
         fTrans.add(R.id.frgCont, recyclerFragment);
         fTrans.commit();
 
-        loadPicture(1);
-    }
-
-    public void loadPicture(int page) {
-        mainPresenter.loadPictureFromInternet(page);
     }
 
     public void loadAlbum(String galleryHash) {

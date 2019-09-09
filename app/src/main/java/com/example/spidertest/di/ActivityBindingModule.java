@@ -1,6 +1,6 @@
 package com.example.spidertest.di;
 
-import com.example.spidertest.MainActivity;
+import com.example.spidertest.view.MainActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

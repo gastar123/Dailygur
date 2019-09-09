@@ -8,6 +8,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.spidertest.R;
 import com.example.spidertest.dto.InnerData;
@@ -20,18 +21,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.PictureHolder> {
 
-    private Context context;
+    RequestManager requestManager;
     private OnItemClickListener clickListener;
     private final List<InnerData> imageList = new ArrayList<>();
     private int imgWidth;
-    private final int IMG_MARGIN;
-    private final int CARD_MARGIN;
 
-    public PicturesAdapter(Context context, OnItemClickListener clickListener) {
-        this.context = context;
+    public PicturesAdapter(RequestManager requestManager, OnItemClickListener clickListener) {
+        this.requestManager = requestManager;
         this.clickListener = clickListener;
-        IMG_MARGIN = (int) (7 * context.getResources().getDisplayMetrics().density);
-        CARD_MARGIN = (int) (5 * context.getResources().getDisplayMetrics().density);
     }
 
     public void changeData(List<InnerData> imageList) {
@@ -46,6 +43,9 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+                Context context = recyclerView.getContext();
+                int IMG_MARGIN = (int) (7 * context.getResources().getDisplayMetrics().density);
+                int CARD_MARGIN = (int) (5 * context.getResources().getDisplayMetrics().density);
                 imgWidth = (recyclerView.getWidth() / 2) - (CARD_MARGIN * 2) - (IMG_MARGIN * 2);
                 recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -55,7 +55,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     @NonNull
     @Override
     public PictureHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.picture, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.picture, parent, false);
         final PictureHolder pictureHolder = new PictureHolder(view);
         return pictureHolder;
     }
@@ -84,7 +84,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
             ivPicture.getLayoutParams().height = imgWidth * image.getCoverHeight() / image.getCoverWidth();
             ivPicture.requestLayout();
             RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.image_placeholder).fitCenter();
-            Glide.with(context).load(image.getImageLink()).apply(requestOptions).into(ivPicture);
+            requestManager.load(image.getImageLink()).apply(requestOptions).into(ivPicture);
             itemView.setOnClickListener(v -> {
                 if (getAdapterPosition() != RecyclerView.NO_POSITION) {
                     clickListener.onItemClick(imageList.get(getAdapterPosition()));
