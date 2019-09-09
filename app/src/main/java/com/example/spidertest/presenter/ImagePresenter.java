@@ -46,4 +46,8 @@ public class ImagePresenter {
         Log.e("ERROR", error.getMessage(), error);
         view.makeToast("Нет подключения к серверу");
     }
+
+    public void onDestroy() {
+        view = null;
+    }
 }

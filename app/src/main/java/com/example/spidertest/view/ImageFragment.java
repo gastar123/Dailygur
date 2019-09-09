@@ -2,11 +2,6 @@ package com.example.spidertest.view;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import dagger.android.AndroidInjection;
-import dagger.android.support.AndroidSupportInjection;
-
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +25,9 @@ import com.google.android.flexbox.FlexboxLayout;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import androidx.fragment.app.Fragment;
+import dagger.android.support.AndroidSupportInjection;
 
 public class ImageFragment extends Fragment implements IImageView {
 
@@ -89,7 +87,7 @@ public class ImageFragment extends Fragment implements IImageView {
                 setImagesAndDescription(imageInAlbum));
 
         Stream.of(album.getTags()).forEach(tag ->
-                setTags(tag));
+                addTag(tag));
     }
 
     @Override
@@ -98,7 +96,7 @@ public class ImageFragment extends Fragment implements IImageView {
         setImagesAndDescription(image);
 
         Stream.of(image.getTags()).forEach(tag ->
-                setTags(tag));
+                addTag(tag));
     }
 
     @Override
@@ -126,7 +124,7 @@ public class ImageFragment extends Fragment implements IImageView {
         });
     }
 
-    private void setTags(Tag tag) {
+    private void addTag(Tag tag) {
         LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
         lParams.setMargins(10, 10, 10, 10);
         TextView tvTag = new TextView(mainActivity);
@@ -153,5 +151,11 @@ public class ImageFragment extends Fragment implements IImageView {
     @Override
     public void makeToast(String s) {
         Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 }

@@ -1,7 +1,5 @@
 package com.example.spidertest.model;
 
-import android.util.Log;
-
 import com.example.spidertest.dto.Album;
 import com.example.spidertest.dto.Comment;
 import com.example.spidertest.dto.Image;

@@ -1,7 +1,5 @@
 package com.example.spidertest.di;
 
-import com.example.spidertest.model.ImageModel;
-import com.example.spidertest.model.RecyclerModel;
 import com.example.spidertest.model.ServerApi;
 
 import javax.inject.Singleton;
@@ -43,15 +41,5 @@ public class NetworkModule {
 
         ServerApi serverApi = retrofit.create(ServerApi.class);
         return serverApi;
-    }
-
-    @Provides
-    RecyclerModel provideRecyclerModel(ServerApi serverApi) {
-        return new RecyclerModel(serverApi);
-    }
-
-    @Provides
-    ImageModel provideImageModel(ServerApi serverApi) {
-        return new ImageModel(serverApi);
     }
 }

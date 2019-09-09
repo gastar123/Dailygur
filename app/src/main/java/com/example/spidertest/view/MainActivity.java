@@ -7,7 +7,6 @@ import com.example.spidertest.dto.InnerData;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import dagger.android.AndroidInjection;
 
 public class MainActivity extends AppCompatActivity {
 
