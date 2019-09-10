@@ -42,7 +42,8 @@ public class RecyclerFragment extends Fragment implements IRecyclerView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate();
-        picturesAdapter = new PicturesAdapter(Glide.with(getActivity()), image -> ((MainActivity) getActivity()).toImageFragment(image));
+        picturesAdapter = new PicturesAdapter(Glide.with(getActivity()),
+                image -> ((MainActivity) getActivity()).toImageFragment(image));
     }
 
     @Override
@@ -55,7 +56,8 @@ public class RecyclerFragment extends Fragment implements IRecyclerView {
     }
 
     private void init(RecyclerView recyclerView) {
-        StaggeredGridLayoutManager staggeredVerticalLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager staggeredVerticalLayoutManager = new StaggeredGridLayoutManager(2,
+                StaggeredGridLayoutManager.VERTICAL);
         staggeredVerticalLayoutManager.supportsPredictiveItemAnimations();
 
         recyclerView.setLayoutManager(staggeredVerticalLayoutManager);
@@ -65,7 +67,8 @@ public class RecyclerFragment extends Fragment implements IRecyclerView {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 int[] lastVisiblePictures = staggeredVerticalLayoutManager.findLastCompletelyVisibleItemPositions(null);
                 List<InnerData> currentList = presenter.getCurrentList();
-                if ((lastVisiblePictures[0] + 1 == currentList.size() || lastVisiblePictures[1] + 1 == currentList.size())) {
+                if ((lastVisiblePictures[0] + 1 == currentList.size()
+                        || lastVisiblePictures[1] + 1 == currentList.size())) {
                     presenter.loadNextPage();
                 }
                 super.onScrolled(recyclerView, dx, dy);

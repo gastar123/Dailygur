@@ -16,30 +16,21 @@ public class ImagePresenter {
     }
 
     public void loadAlbum(String id) {
-        model.loadAlbum(id)
-                .subscribe(album -> {
-                            view.setAlbum(album);
-                            loadComment(id);
-                        },
-                        error -> onError(error)
-                );
+        model.loadAlbum(id).subscribe(album -> {
+            view.setAlbum(album);
+            loadComment(id);
+        }, error -> onError(error));
     }
 
     public void loadImage(String id) {
-        model.loadImage(id)
-                .subscribe(image -> {
-                            view.setImage(image);
-                            loadComment(id);
-                        },
-                        error -> onError(error)
-                );
+        model.loadImage(id).subscribe(image -> {
+            view.setImage(image);
+            loadComment(id);
+        }, error -> onError(error));
     }
 
     private void loadComment(String id) {
-        model.loadComment(id)
-                .subscribe(allComments -> view.setCommentList(allComments),
-                        error -> onError(error)
-                );
+        model.loadComment(id).subscribe(allComments -> view.setCommentList(allComments), error -> onError(error));
     }
 
     private void onError(Throwable error) {

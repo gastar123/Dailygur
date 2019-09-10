@@ -32,8 +32,7 @@ public class NetworkModule {
         });
 
         OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.imgur.com/")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.imgur.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .client(client)
