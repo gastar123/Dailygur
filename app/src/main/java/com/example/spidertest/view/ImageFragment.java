@@ -20,23 +20,27 @@ import com.example.spidertest.dto.Image;
 import com.example.spidertest.dto.InnerData;
 import com.example.spidertest.dto.Tag;
 import com.example.spidertest.presenter.ImagePresenter;
+import com.example.spidertest.recycler.CommentsAdapter;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import dagger.android.support.AndroidSupportInjection;
 
 public class ImageFragment extends Fragment implements IImageView {
 
     @Inject
     ImagePresenter presenter;
+    private CommentsAdapter commentsAdapter;
     private MainActivity mainActivity;
     private TextView tvTitle;
     private LinearLayout layImage;
-    private LinearLayout layComment;
+    private RecyclerView rvComment;
     private FlexboxLayout layTag;
     private LinearLayout.LayoutParams lParams;
     private int wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -57,15 +61,25 @@ public class ImageFragment extends Fragment implements IImageView {
         super.onAttach(context);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        commentsAdapter = new CommentsAdapter();
+    }
+
     //    TODO Переделать на recyclerview
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
+
+        rvComment = view.findViewById(R.id.rvComment);
+        rvComment.setNestedScrollingEnabled(false);
+        rvComment.setAdapter(commentsAdapter);
+
         mainActivity = (MainActivity) getActivity();
         tvTitle = view.findViewById(R.id.tvTitle);
         layTag = view.findViewById(R.id.layTag);
         layImage = view.findViewById(R.id.layImage);
-        layComment = view.findViewById(R.id.layComment);
         lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
         lParams.setMargins(0, 10, 0, 0);
 
@@ -101,9 +115,11 @@ public class ImageFragment extends Fragment implements IImageView {
 
     @Override
     public void setCommentList(List<Comment> commentList) {
-        LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(matchParent, wrapContent);
-        lParams.setMargins(0, 10, 0, 0);
-        addComments(commentList, 0);
+//        LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(matchParent, wrapContent);
+//        lParams.setMargins(0, 10, 0, 0);
+//        addComments(commentList, 0);
+
+        commentsAdapter.changeData(commentList);
     }
 
     private void addComments(List<Comment> commentList, int lvl) {
@@ -116,7 +132,7 @@ public class ImageFragment extends Fragment implements IImageView {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(lParams);
             lp.width = matchParent;
             lp.leftMargin = lParams.leftMargin + 20 * lvl;
-            layComment.addView(view, lp);
+            rvComment.addView(view, lp);
             List<Comment> children = comment.getChildren();
             if (children != null && !children.isEmpty()) {
                 addComments(children, lvl + 1);
