@@ -21,6 +21,32 @@ public class Comment {
     private String platform;
     private List<Comment> children = null;
 
+    /**
+     * Развернут ли элемент в интерфейсе
+     */
+    private boolean open;
+
+    /**
+     * Уровень вложенности в интерфейсе
+     */
+    private int lvl;
+
+    public int getLvl() {
+        return lvl;
+    }
+
+    public void setLvl(int lvl) {
+        this.lvl = lvl;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
     public Integer getId() {
         return id;
     }

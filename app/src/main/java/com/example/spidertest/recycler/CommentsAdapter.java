@@ -61,7 +61,44 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             tvComment.setText(comment.getComment());
             if (comment.getChildren() != null && !comment.getChildren().isEmpty()) {
                 tvChildren.setText(String.valueOf(comment.getChildren().size()));
+            } else {
+                tvChildren.setText("");
             }
+            ((ViewGroup.MarginLayoutParams)itemView.getLayoutParams()).leftMargin = comment.getLvl() * 20;
+
+            itemView.setOnClickListener(v -> {
+                if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    List<Comment> childrenList = comment.getChildren();
+                    if (comment.isOpen()) {
+                        int count = closeComment(childrenList);
+                        notifyItemRangeRemoved(getAdapterPosition() + 1, count);
+                        comment.setOpen(false);
+                    } else {
+                        openComment(childrenList, comment.getLvl() + 1);
+                        comment.setOpen(true);
+                    }
+                }
+            });
+        }
+
+        private void openComment(List<Comment> childrenList, int lvl) {
+            for (Comment child : childrenList) {
+                child.setLvl(lvl);
+            }
+            CommentsAdapter.this.commentList.addAll(getAdapterPosition() + 1, childrenList);
+            notifyItemRangeInserted(getAdapterPosition() + 1, childrenList.size());
+        }
+
+        private int closeComment(List<Comment> childrenList) {
+            int childrenCount = childrenList.size();
+            commentList.removeAll(childrenList);
+            for (Comment child : childrenList) {
+                if (child.isOpen()) {
+                    child.setOpen(false);
+                    childrenCount += closeComment(child.getChildren());
+                }
+            }
+            return childrenCount;
         }
     }
 
