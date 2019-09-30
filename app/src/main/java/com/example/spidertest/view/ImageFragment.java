@@ -1,15 +1,22 @@
 package com.example.spidertest.view;
 
 import android.content.Context;
+import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.util.Linkify;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
@@ -28,6 +35,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import dagger.android.support.AndroidSupportInjection;
@@ -38,11 +46,13 @@ public class ImageFragment extends Fragment implements IImageView {
     ImagePresenter presenter;
     private CommentsAdapter commentsAdapter;
     private MainActivity mainActivity;
+    private NestedScrollView scrollView;
     private TextView tvTitle;
     private LinearLayout layImage;
     private RecyclerView rvComment;
     private FlexboxLayout layTag;
     private LinearLayout.LayoutParams lParams;
+    private LinearLayout.LayoutParams videoParams;
     private int wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT;
     private int matchParent = LinearLayout.LayoutParams.MATCH_PARENT;
 
@@ -77,6 +87,7 @@ public class ImageFragment extends Fragment implements IImageView {
         rvComment.setAdapter(commentsAdapter);
 
         mainActivity = (MainActivity) getActivity();
+        scrollView = view.findViewById(R.id.scrollView);
         tvTitle = view.findViewById(R.id.tvTitle);
         layTag = view.findViewById(R.id.layTag);
         layImage = view.findViewById(R.id.layImage);
@@ -102,6 +113,8 @@ public class ImageFragment extends Fragment implements IImageView {
 
         Stream.of(album.getTags()).forEach(tag ->
                 addTag(tag));
+
+        setScrollListener();
     }
 
     @Override
@@ -111,6 +124,8 @@ public class ImageFragment extends Fragment implements IImageView {
 
         Stream.of(image.getTags()).forEach(tag ->
                 addTag(tag));
+
+        setScrollListener();
     }
 
     @Override
@@ -120,24 +135,6 @@ public class ImageFragment extends Fragment implements IImageView {
 //        addComments(commentList, 0);
 
         commentsAdapter.changeData(commentList);
-    }
-
-    private void addComments(List<Comment> commentList, int lvl) {
-        Stream.of(commentList).forEach(comment -> {
-            View view = getLayoutInflater().inflate(R.layout.comment_layout, null);
-            TextView tvComment = view.findViewById(R.id.tvComment);
-            TextView tvAuthor = view.findViewById(R.id.tvAuthor);
-            tvComment.setText(comment.getComment());
-            tvAuthor.setText(comment.getAuthor());
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(lParams);
-            lp.width = matchParent;
-            lp.leftMargin = lParams.leftMargin + 20 * lvl;
-            rvComment.addView(view, lp);
-            List<Comment> children = comment.getChildren();
-            if (children != null && !children.isEmpty()) {
-                addComments(children, lvl + 1);
-            }
-        });
     }
 
     private void addTag(Tag tag) {
@@ -151,17 +148,56 @@ public class ImageFragment extends Fragment implements IImageView {
     }
 
     private void setImagesAndDescription(Image image) {
-        ImageView imageView = new ImageView(mainActivity);
-        imageView.setAdjustViewBounds(true);
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        Glide.with(mainActivity).load(image.getLink()).into(imageView);
-        layImage.addView(imageView, lParams);
+        if (image.getMp4() == null) {
+            ImageView imageView = new ImageView(mainActivity);
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            Glide.with(mainActivity).load(image.getLink()).into(imageView);
+            layImage.addView(imageView, lParams);
+        } else {
+
+            Display display = mainActivity.getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int appWidth = size.x;
+            int appHeight = size.y;
+            int editedVideoHeight = (int) (appHeight - 40 * mainActivity.getResources().getDisplayMetrics().density);
+            int videoWidth = editedVideoHeight * image.getWidth() / image.getHeight();
+            int videoHeight = appWidth * image.getHeight() / image.getWidth();
+            if (videoHeight > editedVideoHeight) {
+                videoParams = new LinearLayout.LayoutParams(videoWidth, editedVideoHeight);
+            } else {
+                videoParams = new LinearLayout.LayoutParams(appWidth, videoHeight);
+            }
+
+            VideoView videoView = new VideoView(mainActivity);
+            videoView.setVideoURI(Uri.parse(image.getMp4()));
+            videoView.setMediaController(new MediaController(mainActivity));
+            videoView.start();
+            layImage.addView(videoView, videoParams);
+        }
+
+
+        TextView tvLink = new TextView(mainActivity);
+        tvLink.setText(image.getLink());
+        layImage.addView(tvLink, lParams);
+
         if (image.getDescription() != null) {
             TextView tvDescription = new TextView(mainActivity);
             tvDescription.setAutoLinkMask(Linkify.WEB_URLS);
             tvDescription.setText(image.getDescription());
             layImage.addView(tvDescription, lParams);
         }
+    }
+
+    private void setScrollListener() {
+        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                scrollView.fullScroll(View.FOCUS_UP);
+                scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
     }
 
     @Override
