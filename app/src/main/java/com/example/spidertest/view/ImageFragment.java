@@ -2,6 +2,7 @@ package com.example.spidertest.view;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.util.Linkify;
@@ -155,7 +156,6 @@ public class ImageFragment extends Fragment implements IImageView {
             Glide.with(mainActivity).load(image.getLink()).into(imageView);
             layImage.addView(imageView, lParams);
         } else {
-
             Display display = mainActivity.getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
@@ -169,19 +169,39 @@ public class ImageFragment extends Fragment implements IImageView {
             } else {
                 videoParams = new LinearLayout.LayoutParams(appWidth, videoHeight);
             }
-
             VideoView videoView = new VideoView(mainActivity);
+//            MediaController mediaController = new MediaController(mainActivity);
             videoView.setVideoURI(Uri.parse(image.getMp4()));
-            videoView.setMediaController(new MediaController(mainActivity));
+
+            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+                        @Override
+                        public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                            /*
+                             * add media controller
+                             */
+                            MediaController mc = new MediaController(mainActivity);
+                            videoView.setMediaController(mc);
+                            /*
+                             * and set its position on screen
+                             */
+                            mc.setAnchorView(videoView);
+                        }
+                    });
+                }
+            });
+
+//            mediaController.setAnchorView(videoView);
+//            videoView.setMediaController(mediaController);
             videoView.start();
             layImage.addView(videoView, videoParams);
         }
 
-
         TextView tvLink = new TextView(mainActivity);
         tvLink.setText(image.getLink());
         layImage.addView(tvLink, lParams);
-
         if (image.getDescription() != null) {
             TextView tvDescription = new TextView(mainActivity);
             tvDescription.setAutoLinkMask(Linkify.WEB_URLS);
