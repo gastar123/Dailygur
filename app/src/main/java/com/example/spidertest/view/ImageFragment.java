@@ -7,10 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
@@ -170,33 +172,24 @@ public class ImageFragment extends Fragment implements IImageView {
                 videoParams = new LinearLayout.LayoutParams(appWidth, videoHeight);
             }
             VideoView videoView = new VideoView(mainActivity);
-//            MediaController mediaController = new MediaController(mainActivity);
+            MediaController mediaController = new MediaController(mainActivity);
+//            videoView.setMediaController(mediaController);
             videoView.setVideoURI(Uri.parse(image.getMp4()));
 
-            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
-                        @Override
-                        public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-                            /*
-                             * add media controller
-                             */
-                            MediaController mc = new MediaController(mainActivity);
-                            videoView.setMediaController(mc);
-                            /*
-                             * and set its position on screen
-                             */
-                            mc.setAnchorView(videoView);
-                        }
-                    });
-                }
-            });
+            FrameLayout frameLayout = new FrameLayout(mainActivity);
 
-//            mediaController.setAnchorView(videoView);
-//            videoView.setMediaController(mediaController);
             videoView.start();
-            layImage.addView(videoView, videoParams);
+            frameLayout.addView(videoView, videoParams);
+
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            lp.gravity = Gravity.BOTTOM;
+            mediaController.setLayoutParams(lp);
+
+            frameLayout.setLayoutParams(lp);
+            ((ViewGroup) mediaController.getParent()).removeView(mediaController);
+            frameLayout.addView(mediaController);
+
+            layImage.addView(frameLayout);
         }
 
         TextView tvLink = new TextView(mainActivity);
