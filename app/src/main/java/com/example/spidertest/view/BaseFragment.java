@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.spidertest.R;
 import com.example.spidertest.dto.InnerData;
-import com.example.spidertest.presenter.RecyclerPresenter;
+import com.example.spidertest.presenter.BasePresenter;
 import com.example.spidertest.recycler.PicturesAdapter;
 
 import java.util.List;
@@ -24,12 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import dagger.android.support.AndroidSupportInjection;
 
-public class RecyclerFragment extends Fragment implements IRecyclerView {
+public class BaseFragment extends Fragment implements IBaseView {
 
     @Inject
-    RecyclerPresenter presenter;
+    BasePresenter presenter;
     private PicturesAdapter picturesAdapter;
-
     private RecyclerView recyclerView;
 
     @Override

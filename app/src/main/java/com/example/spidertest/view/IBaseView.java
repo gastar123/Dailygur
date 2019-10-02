@@ -4,7 +4,7 @@ import com.example.spidertest.dto.InnerData;
 
 import java.util.List;
 
-public interface IRecyclerView {
+public interface IBaseView {
 
     void updateList(List<InnerData> imageList);
 

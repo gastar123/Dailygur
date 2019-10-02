@@ -2,24 +2,18 @@ package com.example.spidertest.view;
 
 import android.content.Context;
 import android.graphics.Point;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
@@ -31,6 +25,14 @@ import com.example.spidertest.dto.InnerData;
 import com.example.spidertest.dto.Tag;
 import com.example.spidertest.presenter.ImagePresenter;
 import com.example.spidertest.recycler.CommentsAdapter;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.List;
@@ -56,6 +58,7 @@ public class ImageFragment extends Fragment implements IImageView {
     private FlexboxLayout layTag;
     private LinearLayout.LayoutParams lParams;
     private LinearLayout.LayoutParams videoParams;
+    private LinearLayout.LayoutParams prm;
     private int wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT;
     private int matchParent = LinearLayout.LayoutParams.MATCH_PARENT;
 
@@ -80,7 +83,6 @@ public class ImageFragment extends Fragment implements IImageView {
         commentsAdapter = new CommentsAdapter();
     }
 
-    //    TODO Переделать на recyclerview
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
@@ -96,6 +98,9 @@ public class ImageFragment extends Fragment implements IImageView {
         layImage = view.findViewById(R.id.layImage);
         lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
         lParams.setMargins(0, 10, 0, 0);
+
+        prm = new LinearLayout.LayoutParams(matchParent, wrapContent);
+        prm.setMargins(0, 10, 0, 0);
 
         savedInstanceState = getArguments();
         String id = savedInstanceState.getString("id");
@@ -133,10 +138,6 @@ public class ImageFragment extends Fragment implements IImageView {
 
     @Override
     public void setCommentList(List<Comment> commentList) {
-//        LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(matchParent, wrapContent);
-//        lParams.setMargins(0, 10, 0, 0);
-//        addComments(commentList, 0);
-
         commentsAdapter.changeData(commentList);
     }
 
@@ -156,7 +157,7 @@ public class ImageFragment extends Fragment implements IImageView {
             imageView.setAdjustViewBounds(true);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(mainActivity).load(image.getLink()).into(imageView);
-            layImage.addView(imageView, lParams);
+            layImage.addView(imageView, prm);
         } else {
             Display display = mainActivity.getWindowManager().getDefaultDisplay();
             Point size = new Point();
@@ -171,35 +172,17 @@ public class ImageFragment extends Fragment implements IImageView {
             } else {
                 videoParams = new LinearLayout.LayoutParams(appWidth, videoHeight);
             }
-            VideoView videoView = new VideoView(mainActivity);
-            MediaController mediaController = new MediaController(mainActivity);
-//            videoView.setMediaController(mediaController);
-            videoView.setVideoURI(Uri.parse(image.getMp4()));
 
-            FrameLayout frameLayout = new FrameLayout(mainActivity);
+            PlayerView playerView = new PlayerView(mainActivity);
+            SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(mainActivity);
+            playerView.setPlayer(player);
+            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(mainActivity,
+                    Util.getUserAgent(mainActivity, "SpiderTest"));
+            MediaSource videoSource =
+                    new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(image.getMp4()));
+            player.prepare(videoSource);
 
-            videoView.start();
-            frameLayout.addView(videoView, videoParams);
-
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            lp.gravity = Gravity.BOTTOM;
-            mediaController.setLayoutParams(lp);
-
-            frameLayout.setLayoutParams(lp);
-            ((ViewGroup) mediaController.getParent()).removeView(mediaController);
-            frameLayout.addView(mediaController);
-
-            layImage.addView(frameLayout);
-        }
-
-        TextView tvLink = new TextView(mainActivity);
-        tvLink.setText(image.getLink());
-        layImage.addView(tvLink, lParams);
-        if (image.getDescription() != null) {
-            TextView tvDescription = new TextView(mainActivity);
-            tvDescription.setAutoLinkMask(Linkify.WEB_URLS);
-            tvDescription.setText(image.getDescription());
-            layImage.addView(tvDescription, lParams);
+            layImage.addView(playerView, videoParams);
         }
     }
 

@@ -3,21 +3,21 @@ package com.example.spidertest.presenter;
 import android.util.Log;
 
 import com.example.spidertest.dto.InnerData;
-import com.example.spidertest.model.RecyclerModel;
-import com.example.spidertest.view.IRecyclerView;
+import com.example.spidertest.model.BaseModel;
+import com.example.spidertest.view.IBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerPresenter {
+public class BasePresenter {
 
-    private IRecyclerView view;
-    private RecyclerModel model;
+    private IBaseView view;
+    private BaseModel model;
     private int page;
     private boolean needLoad;
     private List<InnerData> currentList = new ArrayList<>();
 
-    public RecyclerPresenter(IRecyclerView view, RecyclerModel model) {
+    public BasePresenter(IBaseView view, BaseModel model) {
         this.view = view;
         this.model = model;
     }

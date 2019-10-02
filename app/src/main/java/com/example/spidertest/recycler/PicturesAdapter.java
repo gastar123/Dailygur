@@ -1,6 +1,8 @@
 package com.example.spidertest.recycler;
 
 import android.content.Context;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.spidertest.R;
 import com.example.spidertest.dto.InnerData;
+import com.example.spidertest.view.CustomCropTransformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     private OnItemClickListener clickListener;
     private final List<InnerData> imageList = new ArrayList<>();
     private int imgWidth;
+    private int appHeight;
 
     public PicturesAdapter(RequestManager requestManager, OnItemClickListener clickListener) {
         this.requestManager = requestManager;
@@ -47,6 +51,11 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
                 int CARD_MARGIN = (int) (5 * context.getResources().getDisplayMetrics().density);
                 imgWidth = (recyclerView.getWidth() / 2) - (CARD_MARGIN * 2) - (IMG_MARGIN * 2);
                 recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                Display display = recyclerView.getDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                appHeight = size.y;
             }
         });
     }
@@ -79,10 +88,17 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         }
 
         public void bindHolder(InnerData image) {
+            int imgHeight = imgWidth * image.getCoverHeight() / image.getCoverWidth();
             ivPicture.getLayoutParams().width = imgWidth;
-            ivPicture.getLayoutParams().height = imgWidth * image.getCoverHeight() / image.getCoverWidth();
+            if (imgHeight * 0.8 > appHeight) {
+                ivPicture.getLayoutParams().height = (int) (appHeight * 0.8);
+            } else {
+                ivPicture.getLayoutParams().height = imgHeight;
+            }
+
             ivPicture.requestLayout();
-            RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.image_placeholder).fitCenter();
+            RequestOptions requestOptions =
+                    new RequestOptions().placeholder(R.drawable.image_placeholder).transform(new CustomCropTransformation());
             requestManager.load(image.getImageLink()).apply(requestOptions).into(ivPicture);
             itemView.setOnClickListener(v -> {
                 if (getAdapterPosition() != RecyclerView.NO_POSITION) {

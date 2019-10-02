@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerFragment recyclerFragment;
+    private BaseFragment baseFragment;
     private ImageFragment imageFragment;
     private FragmentTransaction fTrans;
 
@@ -19,9 +19,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerFragment = new RecyclerFragment();
+        baseFragment = new BaseFragment();
         fTrans = getSupportFragmentManager().beginTransaction();
-        fTrans.add(R.id.frgCont, recyclerFragment);
+        fTrans.add(R.id.frgCont, baseFragment);
         fTrans.commit();
 
     }

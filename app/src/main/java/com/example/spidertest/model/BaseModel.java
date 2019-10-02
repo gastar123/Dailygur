@@ -8,11 +8,11 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class RecyclerModel {
+public class BaseModel {
 
     private ServerApi serverApi;
 
-    public RecyclerModel(ServerApi serverApi) {
+    public BaseModel(ServerApi serverApi) {
         this.serverApi = serverApi;
     }
 
