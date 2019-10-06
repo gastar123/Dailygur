@@ -49,7 +49,8 @@ public class ImageFragment extends Fragment implements IImageView {
 
     @Inject
     ImagePresenter presenter;
-    private CommentsAdapter commentsAdapter;
+    @Inject
+    CommentsAdapter commentsAdapter;
     private MainActivity mainActivity;
     private NestedScrollView scrollView;
     private TextView tvTitle;
@@ -75,12 +76,6 @@ public class ImageFragment extends Fragment implements IImageView {
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        commentsAdapter = new CommentsAdapter();
     }
 
     @Override
@@ -183,6 +178,13 @@ public class ImageFragment extends Fragment implements IImageView {
             player.prepare(videoSource);
 
             layImage.addView(playerView, videoParams);
+        }
+
+        if (image.getDescription() != null) {
+            TextView tvDescription = new TextView(mainActivity);
+            tvDescription.setAutoLinkMask(Linkify.WEB_URLS);
+            tvDescription.setText(image.getDescription());
+            layImage.addView(tvDescription, lParams);
         }
     }
 

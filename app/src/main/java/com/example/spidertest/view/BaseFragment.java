@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.spidertest.R;
 import com.example.spidertest.dto.InnerData;
 import com.example.spidertest.presenter.BasePresenter;
@@ -22,14 +21,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import dagger.android.support.AndroidSupportInjection;
 
 public class BaseFragment extends Fragment implements IBaseView {
 
     @Inject
     BasePresenter presenter;
-    private PicturesAdapter picturesAdapter;
+    @Inject
+    PicturesAdapter picturesAdapter;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onAttach(Context context) {
@@ -41,17 +43,20 @@ public class BaseFragment extends Fragment implements IBaseView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate();
-        picturesAdapter = new PicturesAdapter(Glide.with(getActivity()),
-                image -> ((MainActivity) getActivity()).toImageFragment(image));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_recycler, container, false);
+        recyclerView = view.findViewById(R.id.rvMain);
+        swipeRefreshLayout = view.findViewById(R.id.pullToRefresh);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(true);
+            presenter.updateFirstPage();
+        });
         init(recyclerView);
 
-        return recyclerView;
+        return view;
     }
 
     private void init(RecyclerView recyclerView) {
@@ -76,6 +81,11 @@ public class BaseFragment extends Fragment implements IBaseView {
     }
 
     @Override
+    public MainActivity getMainActivity() {
+        return (MainActivity) getActivity();
+    }
+
+    @Override
     public void updateList(List<InnerData> imageList) {
         picturesAdapter.changeData(imageList);
     }
@@ -83,6 +93,11 @@ public class BaseFragment extends Fragment implements IBaseView {
     @Override
     public void makeToast(String s) {
         Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void closeRefreshing() {
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
