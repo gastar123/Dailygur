@@ -24,7 +24,7 @@ public class NetworkModule {
             Request original = chain.request();
 
             Request request = original.newBuilder()
-                    .header("Authorization", "Client-ID 6726248734ce3ec")
+                    .header("Authorization", "Client-ID d52b3ca3d3110d6")
                     .method(original.method(), original.body())
                     .build();
 
