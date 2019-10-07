@@ -58,9 +58,8 @@ public class ImageFragment extends Fragment implements IImageView {
     private FlexboxLayout layTag;
     private LinearLayout.LayoutParams lParams;
     private LinearLayout.LayoutParams videoParams;
-    private LinearLayout.LayoutParams prm;
+    private LinearLayout.LayoutParams imageParams;
     private int wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT;
-    private int matchParent = LinearLayout.LayoutParams.MATCH_PARENT;
 
     public static ImageFragment newInstance(InnerData image) {
         ImageFragment fragment = new ImageFragment();
@@ -92,9 +91,6 @@ public class ImageFragment extends Fragment implements IImageView {
         layImage = view.findViewById(R.id.layImage);
         lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
         lParams.setMargins(0, 10, 0, 0);
-
-        prm = new LinearLayout.LayoutParams(matchParent, wrapContent);
-        prm.setMargins(0, 10, 0, 0);
 
         savedInstanceState = getArguments();
         String id = savedInstanceState.getString("id");
@@ -146,18 +142,20 @@ public class ImageFragment extends Fragment implements IImageView {
     }
 
     private void setImagesAndDescription(Image image) {
+        Display display = mainActivity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int appWidth = size.x;
+        int appHeight = size.y;
+
         if (image.getMp4() == null) {
+            int imageHeight = appWidth * image.getHeight() / image.getWidth();
             ImageView imageView = new ImageView(mainActivity);
-            imageView.setAdjustViewBounds(true);
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageParams = new LinearLayout.LayoutParams(appWidth, imageHeight);
+            imageParams.setMargins(0, 10, 0, 0);
             Glide.with(mainActivity).load(image.getLink()).into(imageView);
-            layImage.addView(imageView, prm);
+            layImage.addView(imageView, imageParams);
         } else {
-            Display display = mainActivity.getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int appWidth = size.x;
-            int appHeight = size.y;
             int editedVideoHeight = (int) (appHeight - 40 * mainActivity.getResources().getDisplayMetrics().density);
             int videoWidth = editedVideoHeight * image.getWidth() / image.getHeight();
             int videoHeight = appWidth * image.getHeight() / image.getWidth();
@@ -171,7 +169,7 @@ public class ImageFragment extends Fragment implements IImageView {
             SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(mainActivity);
             playerView.setPlayer(player);
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(mainActivity,
-                    Util.getUserAgent(mainActivity, "SpiderTest"));
+                    Util.getUserAgent(mainActivity, "Dailygur"));
             MediaSource videoSource =
                     new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(image.getMp4()));
             player.prepare(videoSource);

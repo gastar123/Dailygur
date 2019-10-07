@@ -90,7 +90,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         public void bindHolder(InnerData image) {
             int imgHeight = imgWidth * image.getCoverHeight() / image.getCoverWidth();
             ivPicture.getLayoutParams().width = imgWidth;
-            if (imgHeight * 0.8 > appHeight) {
+            if (imgHeight > appHeight * 0.8) {
                 ivPicture.getLayoutParams().height = (int) (appHeight * 0.8);
             } else {
                 ivPicture.getLayoutParams().height = imgHeight;
