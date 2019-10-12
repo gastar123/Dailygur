@@ -153,7 +153,7 @@ public class ImageFragment extends Fragment implements IImageView {
             ImageView imageView = new ImageView(mainActivity);
             imageParams = new LinearLayout.LayoutParams(appWidth, imageHeight);
             imageParams.setMargins(0, 10, 0, 0);
-            Glide.with(mainActivity).load(image.getLink()).into(imageView);
+            Glide.with(mainActivity).load(image.getLink()).skipMemoryCache(true).into(imageView);
             layImage.addView(imageView, imageParams);
         } else {
             int editedVideoHeight = (int) (appHeight - 40 * mainActivity.getResources().getDisplayMetrics().density);

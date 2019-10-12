@@ -10,6 +10,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.xe72.dailygur.R;
 import com.xe72.dailygur.dto.InnerData;
@@ -99,7 +100,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
             ivPicture.requestLayout();
             RequestOptions requestOptions =
                     new RequestOptions().placeholder(R.drawable.image_placeholder).transform(new CustomCropTransformation());
-            requestManager.load(image.getImageLink()).apply(requestOptions).into(ivPicture);
+            requestManager.load(image.getImageLink()).skipMemoryCache(true).apply(requestOptions).into(ivPicture);
             itemView.setOnClickListener(v -> {
                 if (getAdapterPosition() != RecyclerView.NO_POSITION) {
                     clickListener.onItemClick(imageList.get(getAdapterPosition()));
