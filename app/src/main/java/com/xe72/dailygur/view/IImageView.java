@@ -14,5 +14,7 @@ public interface IImageView {
 
     void setCommentList(List<Comment> commentList);
 
+    void closeProgressBar();
+
     void makeToast(String s);
 }

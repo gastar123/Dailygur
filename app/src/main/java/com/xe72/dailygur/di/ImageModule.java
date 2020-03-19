@@ -14,7 +14,7 @@ import dagger.Provides;
 public class ImageModule {
 
     @Provides
-    ImagePresenter provideImageFragment(IImageView view, ImageModel model) {
+    ImagePresenter provideImagePresenter(IImageView view, ImageModel model) {
         return new ImagePresenter(view, model);
     }
 

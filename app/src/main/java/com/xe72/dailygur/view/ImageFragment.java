@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ public class ImageFragment extends Fragment implements IImageView {
     CommentsAdapter commentsAdapter;
     private MainActivity mainActivity;
     private NestedScrollView scrollView;
+    private ProgressBar pbLoading;
     private TextView tvTitle;
     private LinearLayout layImage;
     private RecyclerView rvComment;
@@ -86,6 +88,7 @@ public class ImageFragment extends Fragment implements IImageView {
 
         mainActivity = (MainActivity) getActivity();
         scrollView = view.findViewById(R.id.scrollView);
+        pbLoading = view.findViewById(R.id.pbLoading);
         tvTitle = view.findViewById(R.id.tvTitle);
         layTag = view.findViewById(R.id.layTag);
         layImage = view.findViewById(R.id.layImage);
@@ -128,6 +131,7 @@ public class ImageFragment extends Fragment implements IImageView {
 
     @Override
     public void setCommentList(List<Comment> commentList) {
+        pbLoading.setVisibility(View.GONE);
         commentsAdapter.changeData(commentList);
     }
 
@@ -193,6 +197,11 @@ public class ImageFragment extends Fragment implements IImageView {
                 scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+    }
+
+    @Override
+    public void closeProgressBar() {
+        pbLoading.setVisibility(View.GONE);
     }
 
     @Override
